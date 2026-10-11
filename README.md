@@ -31,6 +31,12 @@ Public playlist visibility does **not** grant download rights.
 - A Telegram bot token from [@BotFather](https://t.me/BotFather)
 - Optional: Spotify Developer app (Client ID + Secret) for metadata
 
+## Official repository
+
+**Source & updates:** https://github.com/arehsman1/song-loader
+
+Clone from there so you always get the latest version and can push your own updates.
+
 ## Quick start (Windows 10/11 – PowerShell)
 
 ```powershell
@@ -44,8 +50,9 @@ winget install Gyan.FFmpeg
 ffmpeg -version
 ffprobe -version
 
-# 3. Project setup
-cd path\to\spotify_playlist_bot
+# 3. Clone the project
+git clone https://github.com/arehsman1/song-loader.git
+cd song-loader
 python -m venv .venv
 .\.venv\Scripts\Activate.ps1
 pip install -r requirements.txt
@@ -71,15 +78,18 @@ Open Telegram, find your bot, send `/start`. Test every menu button.
 
 ```bash
 sudo apt update
-sudo apt install -y python3 python3-venv python3-pip ffmpeg
+sudo apt install -y python3 python3-venv python3-pip ffmpeg git
 
-sudo useradd -m -s /bin/bash spotifybot   # non-root user
-sudo mkdir -p /opt/spotify_playlist_bot
-sudo chown spotifybot:spotifybot /opt/spotify_playlist_bot
+# Clone as a normal user (recommended)
+git clone https://github.com/arehsman1/song-loader.git
+cd song-loader
 
-# As spotifybot (or copy files then chown)
-cd /opt/spotify_playlist_bot
-# place project files here
+# Optional: install under a dedicated non-root user
+# sudo useradd -m -s /bin/bash songloader
+# sudo mkdir -p /opt/song-loader
+# sudo chown songloader:songloader /opt/song-loader
+# then clone into /opt/song-loader
+
 python3 -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
@@ -93,19 +103,19 @@ python bot.py
 
 ### systemd service
 
-Create `/etc/systemd/system/spotify-playlist-bot.service`:
+Create `/etc/systemd/system/song-loader.service` (adjust paths if you cloned elsewhere):
 
 ```ini
 [Unit]
-Description=Spotify Playlist Telegram Bot
+Description=Song Loader – Spotify Public Playlist Telegram Bot
 After=network.target
 
 [Service]
 Type=simple
-User=spotifybot
-WorkingDirectory=/opt/spotify_playlist_bot
-EnvironmentFile=/opt/spotify_playlist_bot/.env
-ExecStart=/opt/spotify_playlist_bot/.venv/bin/python bot.py
+User=songloader
+WorkingDirectory=/opt/song-loader
+EnvironmentFile=/opt/song-loader/.env
+ExecStart=/opt/song-loader/.venv/bin/python bot.py
 Restart=on-failure
 RestartSec=5
 StandardOutput=journal
@@ -117,20 +127,24 @@ WantedBy=multi-user.target
 
 ```bash
 sudo systemctl daemon-reload
-sudo systemctl enable --now spotify-playlist-bot
-sudo systemctl status spotify-playlist-bot
-journalctl -u spotify-playlist-bot -f
+sudo systemctl enable --now song-loader
+sudo systemctl status song-loader
+journalctl -u song-loader -f
 ```
 
 Backup database:
 
 ```bash
-cp /opt/spotify_playlist_bot/data/bot.db /path/to/backup/bot-$(date +%F).db
+cp data/bot.db /path/to/backup/bot-$(date +%F).db
+# or if installed under /opt:
+# cp /opt/song-loader/data/bot.db /path/to/backup/bot-$(date +%F).db
 ```
 
 ## Docker
 
 ```bash
+git clone https://github.com/arehsman1/song-loader.git
+cd song-loader
 cp .env.example .env
 # edit .env
 docker compose build
@@ -178,7 +192,7 @@ See `.env.example`. Important variables:
 ## Project layout
 
 ```
-spotify_playlist_bot/
+song-loader/                  # https://github.com/arehsman1/song-loader
   bot.py
   config.py
   keyboards.py
