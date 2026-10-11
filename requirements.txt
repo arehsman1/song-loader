@@ -1,0 +1,9 @@
+aiogram==3.13.1
+aiohttp==3.10.10
+python-dotenv==1.0.1
+spotipy==2.24.0
+aiosqlite==0.20.0
+pytest==8.3.3
+pytest-asyncio==0.24.0
+pytest-mock==3.14.0
+pathlib2==2.3.7; python_version < "3.4"

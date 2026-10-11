@@ -1,0 +1,21 @@
+version: "3.8"
+
+services:
+  bot:
+    build: .
+    container_name: spotify_playlist_bot
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      - DATA_DIR=/app/data
+      - LOG_LEVEL=INFO
+    volumes:
+      - bot_data:/app/data
+    # Long polling does not need published ports
+    # If you later enable webhooks, map the port:
+    # ports:
+    #   - "8443:8443"
+
+volumes:
+  bot_data:
